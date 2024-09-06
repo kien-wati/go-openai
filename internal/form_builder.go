@@ -39,7 +39,8 @@ func (fb *DefaultFormBuilder) createFormFile(fieldname string, r io.Reader, file
 		return fmt.Errorf("filename cannot be empty")
 	}
 
-	fieldWriter, err := fb.writer.CreateFormFile(fieldname, filename)
+	// fieldWriter, err := fb.writer.CreateFormFile(fieldname, filename)
+	fieldWriter, err := fb.writer.CreateFormField(fieldname)
 	if err != nil {
 		return err
 	}
