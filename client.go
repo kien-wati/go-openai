@@ -185,6 +185,10 @@ func (c *Client) setCommonHeaders(req *http.Request) {
 	// Azure API Key authentication
 	if c.config.APIType == APITypeAzure || c.config.APIType == APITypeCloudflareAzure {
 		req.Header.Set(AzureAPIKeyHeader, c.config.authToken)
+	} else if c.config.APIType == APITypeHelicone {
+		req.Header["Helicone-Auth"] = []string{fmt.Sprintf("Bearer %s", c.config.authToken)}
+		req.Header["Helicone-OpenAI-Api-Base"] = []string{c.config.HeliconeOpenAIApiBase}
+		req.Header["Helicone-User-Id"] = []string{c.config.HeliconeUserId}
 	} else if c.config.authToken != "" {
 		// OpenAI or Azure AD authentication
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.config.authToken))

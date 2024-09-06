@@ -20,6 +20,7 @@ const (
 	APITypeAzure           APIType = "AZURE"
 	APITypeAzureAD         APIType = "AZURE_AD"
 	APITypeCloudflareAzure APIType = "CLOUDFLARE_AZURE"
+	APITypeHelicone        APIType = "HELICONE"
 )
 
 const AzureAPIKeyHeader = "api-key"
@@ -41,6 +42,9 @@ type ClientConfig struct {
 	AssistantVersion     string
 	AzureModelMapperFunc func(model string) string // replace model to azure deployment name func
 	HTTPClient           HTTPDoer
+
+	HeliconeOpenAIApiBase string
+	HeliconeUserId        string
 
 	EmptyMessagesLimit uint
 }
@@ -69,6 +73,23 @@ func DefaultAzureConfig(apiKey, baseURL string) ClientConfig {
 		AzureModelMapperFunc: func(model string) string {
 			return regexp.MustCompile(`[.:]`).ReplaceAllString(model, "")
 		},
+
+		HTTPClient: &http.Client{},
+
+		EmptyMessagesLimit: defaultEmptyMessagesLimit,
+	}
+}
+
+func DefaultHeliconeConfig(apiKey, baseURL, heliconeOpenAIApiBase, heliconeUserId string) ClientConfig {
+	return ClientConfig{
+		authToken:        apiKey,
+		BaseURL:          baseURL,
+		APIType:          APITypeHelicone,
+		AssistantVersion: defaultAssistantVersion,
+		OrgID:            "",
+
+		HeliconeOpenAIApiBase: heliconeOpenAIApiBase,
+		HeliconeUserId:        heliconeUserId,
 
 		HTTPClient: &http.Client{},
 
