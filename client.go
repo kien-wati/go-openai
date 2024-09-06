@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	utils "github.com/kien-wati/go-openai/internal"
+	"moul.io/http2curl"
 )
 
 // Client is OpenAI GPT-3 API client.
@@ -122,6 +123,9 @@ func (c *Client) sendRequest(req *http.Request, v Response) error {
 	if contentType == "" {
 		req.Header.Set("Content-Type", "application/json")
 	}
+
+	cmd, _ := http2curl.GetCurlCommand(req)
+	fmt.Println(cmd)
 
 	res, err := c.config.HTTPClient.Do(req)
 	if err != nil {
